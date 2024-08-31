@@ -28,7 +28,7 @@ public class NotesController {
     public ResponseEntity<List<Note>> getAllNotes() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        User user = userService.findUserByUserName(userName);
+        User user = userService.findUserByUserID(userName);
         List<Note> noteList = user.getNoteList();
         if (noteList != null) {
             return ResponseEntity.ok(noteList);
@@ -40,7 +40,7 @@ public class NotesController {
     public ResponseEntity<Optional<Note>> getNoteById(@PathVariable String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        User user = userService.findUserByUserName(userName);
+        User user = userService.findUserByUserID(userName);
         List<Note> collect = user.getNoteList().stream().filter(x -> x.getId().equals(id)).toList();
         if (!collect.isEmpty()) {
             Optional<Note> note = noteService.getNoteById(id);
@@ -67,7 +67,7 @@ public class NotesController {
     public ResponseEntity<Note> updateNote(@PathVariable String id, @RequestBody Note note) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        User user = userService.findUserByUserName(userName);
+        User user = userService.findUserByUserID(userName);
 
         List<Note> list = user.getNoteList().stream().filter(x -> x.getId().equals(id)).toList();
         if (!list.isEmpty()) {
@@ -89,7 +89,7 @@ public class NotesController {
     public ResponseEntity<Void> deleteNoteById(@PathVariable String id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-        User user = userService.findUserByUserName(userName);
+        User user = userService.findUserByUserID(userName);
         boolean removed = noteService.deleteNoteById(id, userName);
         if (removed) {
             return ResponseEntity.noContent().build();

@@ -21,10 +21,15 @@ public class User {
 
     @NonNull
     @Indexed(unique = true)
+    private String userId;
+
+    @NonNull
     private String userName;
 
     @NonNull
-    @Indexed(unique = true)
+    private String email;
+
+    @NonNull
     private String password;
 
     private List<String> roles;

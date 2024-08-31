@@ -24,9 +24,10 @@ public class NoteService {
     }
     @Transactional
     public Note createNote(Note note, String userName) {
-        User user = userService.findUserByUserName(userName);
+        User user = userService.findUserByUserID(userName);
         note.setLocalDateTime(LocalDateTime.now());
-        note.setUserName(userName);
+        note.setUserName(user.getUserName());
+        note.setUserId(userName);
         Note saved = noteRepository.save(note);
         user.getNoteList().add(saved);
         userService.saveDataInUser(user);
@@ -36,7 +37,7 @@ public class NoteService {
     public boolean deleteNoteById(String id,String userName) {
         boolean removed = false;
         try {
-            User user = userService.findUserByUserName(userName);
+            User user = userService.findUserByUserID(userName);
             removed = user.getNoteList().removeIf(x -> x.getId().equals(id));
             if (removed){
                 userService.saveDataInUser(user);
@@ -54,6 +55,6 @@ public class NoteService {
     }
     @Transactional
     public void deleteNotesByUserName(String userName) {
-        noteRepository.deleteByUserName(userName);
+        noteRepository.deleteByUserId(userName);
     }
 }

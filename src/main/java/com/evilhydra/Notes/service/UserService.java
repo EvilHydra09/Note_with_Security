@@ -4,8 +4,6 @@ import com.evilhydra.Notes.model.User;
 import com.evilhydra.Notes.repository.NoteRepository;
 import com.evilhydra.Notes.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,26 +17,24 @@ public class UserService {
     @Autowired
     private NoteRepository noteRepository;
 
-    private static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+
 
 
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
+
+
     public Optional<User> getUserById(String id) {
         return userRepository.findById(id);
     }
 
     public User createUser(User user) {
-        user.setPassword(PASSWORD_ENCODER.encode(user.getPassword()));
-        user.setRoles(List.of("USER"));
         return userRepository.save(user);
     }
 
     public User createAdminUser(User user){
-        user.setPassword(PASSWORD_ENCODER.encode(user.getPassword()));
-        user.setRoles(List.of("USER","ADMIN"));
         return userRepository.save(user);
     }
 
@@ -46,15 +42,15 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User findUserByUserName(String username) {
-        return userRepository.findByUserName(username);
+    public User findUserByUserID(String username) {
+        return userRepository.findByUserId(username);
     }
 
-    public void deleteUserByUserName(String username) {
-        // Delete all notes associated with the user
-        noteRepository.deleteByUserName(username);
+    public void deleteUserByUserID(String userID) {
+
+        noteRepository.deleteByUserId(userID);
         // Delete the user
-        userRepository.deleteByUserName(username);
+        userRepository.deleteByUserId(userID);
     }
 
 }
