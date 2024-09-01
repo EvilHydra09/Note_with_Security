@@ -50,7 +50,10 @@ public class FirebaseFilter extends OncePerRequestFilter {
                 User newUser = new User();
                 newUser.setId(uid);
                 newUser.setUserId(uid);
-                newUser.setUserName(decodedToken.getName());
+                // Handle null values for name
+                String name = decodedToken.getName();
+                newUser.setUserName((name != null && !name.isEmpty()) ? name : "User");
+
                 newUser.setEmail(decodedToken.getEmail());
                 newUser.setRoles(List.of("USER"));
                 newUser.setPassword("");
