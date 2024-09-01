@@ -52,5 +52,17 @@ public class UserService {
         // Delete the user
         userRepository.deleteByUserId(userID);
     }
+    public void updateUser(User user) {
+        // Check if the user exists in the database
+        Optional<User> existingUser = userRepository.findById(user.getId());
+        if (existingUser.isPresent()) {
+            User existing = existingUser.get();
+            existing.setUserName(user.getUserName());
+            // Any other fields you want to update
+            userRepository.save(existing);
+        } else {
+            throw new RuntimeException("User not found with id: " + user.getId());
+        }
+    }
 
 }

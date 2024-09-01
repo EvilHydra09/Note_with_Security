@@ -19,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -54,10 +55,21 @@ public class FirebaseFilter extends OncePerRequestFilter {
                 String name = decodedToken.getName();
                 newUser.setUserName((name != null && !name.isEmpty()) ? name : "User");
 
+                // Extract provider from the decoded token
+                String provider = getProviderFromToken(decodedToken);
+                newUser.setProvider(provider);
+
+
                 newUser.setEmail(decodedToken.getEmail());
                 newUser.setRoles(List.of("USER"));
                 newUser.setPassword("");
                 userService.createUser(newUser);
+            }else {
+                // Update existing user details
+                User user = existingUser.get();
+                String name = decodedToken.getName();
+                user.setUserName((name != null && !name.isEmpty()) ? name : "User");
+                userService.updateUser(user);
             }
 
 
@@ -72,6 +84,15 @@ public class FirebaseFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
+    private String getProviderFromToken(FirebaseToken decodedToken) {
+        // Check if the decoded token has a claims map with the 'firebase' claim
+        if (decodedToken.getClaims().containsKey("firebase")) {
+            Map<String, Object> firebaseClaims = (Map<String, Object>) decodedToken.getClaims().get("firebase");
+            if (firebaseClaims != null && firebaseClaims.containsKey("sign_in_provider")) {
+                return (String) firebaseClaims.get("sign_in_provider");
+            }
+        }
+        return "Firebase"; // Default to Firebase if no specific provider is found
+    }
 
 }

@@ -37,4 +37,6 @@ public class User {
     @DBRef
     private List<Note> noteList = new ArrayList<>();
 
+    private String provider;
+
 }
