@@ -25,7 +25,7 @@ public class NoteService {
     @Transactional
     public Note createNote(Note note, String userName) {
         User user = userService.findUserByUserID(userName);
-        note.setLocalDateTime(LocalDateTime.now());
+        note.setRemoteAddedDateTime(LocalDateTime.now());
         note.setUserName(user.getUserName());
         note.setUserId(userName);
         Note saved = noteRepository.save(note);
@@ -50,7 +50,7 @@ public class NoteService {
     }
 
     public void updateNote(Note updatedNote) {
-        updatedNote.setLocalDateTime(LocalDateTime.now());
+        updatedNote.setRemoteAddedDateTime(LocalDateTime.now());
         noteRepository.save(updatedNote);
     }
     @Transactional

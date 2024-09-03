@@ -20,7 +20,9 @@ public class Note {
     private String title;
     private String userId;
     private String content;
-    private LocalDateTime localDateTime;
+    private LocalDateTime remoteAddedDateTime;
+    private String createdNoteLocally;
+    private String updatedNoteLocally;
     private String userName;
 
 }
